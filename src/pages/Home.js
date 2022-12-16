@@ -126,7 +126,7 @@ const Home = ({ type }) => {
         <Box component="div" className="fillAvailable footer">
           <Box component="div">
             {(type == 'start') && <Button onClick={() => navigate('/play')} variant="contained" className="fillAvailable button">Start</Button>}
-            {(type == 'play') && <Button onClick={() => navigate('/inputtext')} variant="contained" className="fillAvailable button">Play</Button>}
+            {(type == 'play') && <Button onClick={() => navigate('/inputtext')} variant="contained" className="fillAvailable button">Next</Button>}
             {(type == 'inputtext') && <Button variant="contained" className="fillAvailable button" onClick={() => handleStartVisionButton()}>Next</Button>}
             {(type == 'inputaudio') && <Button onClick={() => handleInputAudio()} variant="contained" className="fillAvailable button">Next</Button>}
           </Box>

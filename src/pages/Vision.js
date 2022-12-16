@@ -15,12 +15,27 @@ const Vision = () => {
   const [videoUrl, setVideoUrl] = useState('')
   const [openaiResponse, setOpenaiResponse] = useState('')
   const [txt2imageUrl, setTxt2imageUrl] = useState('')
+  const [pdfDownloadUrl, setPdfDownloadUrl] = useState('')
   useEffect(() => {
     if (socket) {
       socket.on('generated', (data) => {
         console.log('--------------generated : ')
         console.log(data)
-        setVideoUrl(data.fileName)
+        setVideoUrl({
+          video: data.fileName,
+          thumbnail: data.thumbnailUrl
+        })
+
+        socket.emit('generatepdf', {
+          imgUrl: txt2imageUrl,
+          gpt1txt: openaiResponse.gpt_1,
+          gpt2txt: openaiResponse.gpt_2,
+          thumbImgUrl: data.thumbnailUrl
+        })
+      })
+
+      socket.on('generatePdf', (data) => {
+        setPdfDownloadUrl(data.url)
       })
 
       socket.on('txt2image', (data) => {
@@ -73,16 +88,16 @@ const Vision = () => {
           src={(txt2imageUrl && txt2imageUrl.slice(0, 4) === 'http') ? txt2imageUrl : process.env.REACT_APP_API_URL + txt2imageUrl.slice(1)}
           loading="lazy"
           className='img-list'
-        /> : 'Loading...'}
+        /> : 'Loading, your image will appear here (~3 minutes)'}
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
-        - The plan to achieve your vision of the future
+        - Story about your vision of the future
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem' }}>
         {(openaiResponse !== '') ? openaiResponse.gpt_1 : 'Loading...'}
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
-        - Your vision of the future
+        - Plan to achieve the vision of your future
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem' }}>
         {(openaiResponse !== '') ? openaiResponse.gpt_1 : 'Loading...'}
@@ -91,15 +106,28 @@ const Vision = () => {
         - The video animation of your vision of the future
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem', paddingBottom: '2rem' }}>
-        {(videoUrl !== '') ? <CardMedia
+        {(videoUrl !== '') ? <img
+          src={(videoUrl.thumbnail && videoUrl.thumbnail.slice(0, 4) === 'http') ? videoUrl.thumbnail : process.env.REACT_APP_API_URL + videoUrl.thumbnail.slice(1)}
+          loading="lazy"
+          className='img-list'
+        /> : 'Loading, your video will appear here (~10 minutes)'}
+        {/* {(videoUrl !== '') ? <CardMedia
           component="video"
           autoPlay
           muted
           loop
           playsinline='true'
           src={(videoUrl && videoUrl.slice(0, 4) === 'http') ? videoUrl : process.env.REACT_APP_API_URL + videoUrl.slice(1)}
-        /> : 'Loading...'}
+        /> : ''} */}
       </Box>
+      {(pdfDownloadUrl !== '') && <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
+        <a href={pdfDownloadUrl} download="w3logo" style="color: #ccc">
+          Download PDF
+        </a>
+        <a href={videoUrl.video} download="w3logo" style="color: #ccc">
+          Download Video
+        </a>
+      </Box>}
     </>
   )
 }
