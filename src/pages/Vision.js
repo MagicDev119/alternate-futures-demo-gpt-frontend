@@ -18,11 +18,14 @@ const Vision = () => {
   useEffect(() => {
     if (socket) {
       socket.on('generated', (data) => {
+        console.log('--------------generated : ')
         console.log(data)
         setVideoUrl(data.fileName)
       })
 
       socket.on('txt2image', (data) => {
+        console.log('--------------txt2image : ')
+        console.log(data)
         setTxt2imageUrl(data.fileName)
       })
 
