@@ -14,6 +14,7 @@ const socket = io(process.env.REACT_APP_API_URL)
 const Vision = () => {
   const [videoUrl, setVideoUrl] = useState('')
   const [openaiResponse, setOpenaiResponse] = useState('')
+  const [txt2imageUrl, setTxt2imageUrl] = useState('')
   useEffect(() => {
     if (socket) {
       socket.on('generated', (data) => {
@@ -21,21 +22,34 @@ const Vision = () => {
         setVideoUrl(data.fileName)
       })
 
+      socket.on('txt2image', (data) => {
+        setTxt2imageUrl(data.fileName)
+      })
+
       socket.on('openai', (data) => {
         console.log('--------------openai : ')
         console.log(data)
-        setOpenaiResponse((data.choices && data.choices[0]) ? data.choices[0].text : 'empty request')
+        setOpenaiResponse({
+          gpt_1: (data.openai1.choices && data.openai1.choices[0]) ? data.openai1.choices[0].text : 'empty request',
+          gpt_2: (data.openai2.choices && data.openai2.choices[0]) ? data.openai2.choices[0].text : 'empty request'
+        })
       })
 
       socket.emit('videogenerate', {
         inputaudio: window.localStorage.getItem('inputaudio')
       })
 
+      socket.emit('txt2image', {
+        inputtext: window.localStorage.getItem('inputtext')
+      })
 
       socket.emit('openai', {
         inputaudio: window.localStorage.getItem('inputaudio'),
         inputtext: window.localStorage.getItem('inputtext'),
-        username: window.localStorage.getItem('username')
+        username: window.localStorage.getItem('username'),
+        userprofession: window.localStorage.getItem('user_profession'),
+        userhobbies: window.localStorage.getItem('user_hobbies'),
+        passions: window.localStorage.getItem('user_passionate')
       })
     }
 
@@ -52,17 +66,23 @@ const Vision = () => {
         - The image of your vision of the future
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem' }}>
-        <img
-          src={defaultThumbnail}
+        {(txt2imageUrl !== '') ? <img
+          src={(txt2imageUrl && txt2imageUrl.slice(0, 4) === 'http') ? txt2imageUrl : process.env.REACT_APP_API_URL + txt2imageUrl.slice(1)}
           loading="lazy"
           className='img-list'
-        />
+        /> : 'Loading...'}
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
         - The plan to achieve your vision of the future
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem' }}>
-        {(openaiResponse !== '') ? openaiResponse : 'Loading...'}
+        {(openaiResponse !== '') ? openaiResponse.gpt_1 : 'Loading...'}
+      </Box>
+      <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
+        - Your vision of the future
+      </Box>
+      <Box component="div" sx={{ m: '2rem 1rem' }}>
+        {(openaiResponse !== '') ? openaiResponse.gpt_1 : 'Loading...'}
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
         - The video animation of your vision of the future

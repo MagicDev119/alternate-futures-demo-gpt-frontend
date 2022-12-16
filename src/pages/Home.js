@@ -38,6 +38,9 @@ const Home = ({ type }) => {
 
   const handleStartVisionButton = () => {
     window.localStorage.setItem('inputtext', userProfession + ',' + userHobbies + ',' + userPassionate);
+    window.localStorage.setItem('user_profession', userProfession);
+    window.localStorage.setItem('user_hobbies', userHobbies);
+    window.localStorage.setItem('user_passionate', userPassionate);
     window.localStorage.setItem('username', userName);
     navigate('/inputaudio')
   }
