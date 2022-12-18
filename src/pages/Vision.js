@@ -18,6 +18,7 @@ const Vision = () => {
   const [pdfDownloadUrl, setPdfDownloadUrl] = useState('')
   useEffect(() => {
     if (socket) {
+      console.log('--=-=-=-=-=')
       socket.on('generated', (data) => {
         console.log('--------------generated : ')
         console.log(data)
@@ -27,26 +28,34 @@ const Vision = () => {
         })
 
         socket.emit('generatepdf', {
-          imgUrl: txt2imageUrl,
-          gpt1txt: openaiResponse.gpt_1,
-          gpt2txt: openaiResponse.gpt_2,
-          thumbImgUrl: data.thumbnailUrl
+          imgUrl: window.localStorage.getItem('txt2image'),
+          gpt1txt: window.localStorage.getItem('gpt_1'),
+          gpt2txt: window.localStorage.getItem('gpt_2'),
+          thumbImgUrl: data.thumbnailUrl,
+          name: window.localStorage.getItem('username'),
+          profession: window.localStorage.getItem('user_profession'),
+          hobbies: window.localStorage.getItem('user_hobbies'),
+          passions: window.localStorage.getItem('user_passionate')
         })
       })
 
       socket.on('generatePdf', (data) => {
+        console.log((data.url && data.url.slice(0, 4) === 'http') ? data.url : process.env.REACT_APP_API_URL + data.url.slice(1))
         setPdfDownloadUrl(data.url)
       })
 
       socket.on('txt2image', (data) => {
         console.log('--------------txt2image : ')
         console.log(data)
+        window.localStorage.setItem('txt2image', data.fileName)
         setTxt2imageUrl(data.fileName)
       })
 
       socket.on('openai', (data) => {
         console.log('--------------openai : ')
         console.log(data)
+        window.localStorage.setItem('gpt_1', (data.openai1.choices && data.openai1.choices[0]) ? data.openai1.choices[0].text : '')
+        window.localStorage.setItem('gpt_2', (data.openai2.choices && data.openai2.choices[0]) ? data.openai2.choices[0].text : '')
         setOpenaiResponse({
           gpt_1: (data.openai1.choices && data.openai1.choices[0]) ? data.openai1.choices[0].text : 'empty request',
           gpt_2: (data.openai2.choices && data.openai2.choices[0]) ? data.openai2.choices[0].text : 'empty request'
@@ -73,11 +82,28 @@ const Vision = () => {
 
     return () => {
       socket.off('generated')
-      socket.off('changeTimer')
-      socket.off('error')
-      socket.off('setVisionData')
+      socket.off('generatePdf')
+      socket.off('txt2image')
+      socket.off('openai')
     }
   }, [])
+
+  const handleDownload = (url) => {
+    // using Java Script method to get PDF file
+    const downloadUrl = url.split('/')
+    fetch(url).then(response => {
+      response.blob().then(blob => {
+        // Creating new object of PDF file
+        const fileURL = window.URL.createObjectURL(blob);
+        // Setting various property values
+        let alink = document.createElement('a');
+        alink.href = fileURL;
+        alink.download = downloadUrl[downloadUrl.length - 1];
+        alink.click();
+      })
+    })
+  }
+
   return (
     <>
       <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
@@ -100,7 +126,7 @@ const Vision = () => {
         - Plan to achieve the vision of your future
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem' }}>
-        {(openaiResponse !== '') ? openaiResponse.gpt_1 : 'Loading...'}
+        {(openaiResponse !== '') ? openaiResponse.gpt_2 : 'Loading...'}
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
         - The video animation of your vision of the future
@@ -121,12 +147,13 @@ const Vision = () => {
         /> : ''} */}
       </Box>
       {(pdfDownloadUrl !== '') && <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
-        <a href={pdfDownloadUrl} download="w3logo" style="color: #ccc">
+        <Box component="span" onClick={() => { handleDownload((pdfDownloadUrl && pdfDownloadUrl.slice(0, 4) === 'http') ? pdfDownloadUrl : process.env.REACT_APP_API_URL + pdfDownloadUrl.slice(1)) }} sx={{ color: '#ccc', cursor: 'pointer' }}>
           Download PDF
-        </a>
-        <a href={videoUrl.video} download="w3logo" style="color: #ccc">
+        </Box>
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+        <Box component="span" onClick={() => { handleDownload((videoUrl.video && videoUrl.video.slice(0, 4) === 'http') ? videoUrl.video : process.env.REACT_APP_API_URL + videoUrl.video.slice(1)) }} sx={{ color: '#ccc', cursor: 'pointer' }}>
           Download Video
-        </a>
+        </Box>
       </Box>}
     </>
   )
