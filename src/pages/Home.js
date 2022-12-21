@@ -4,7 +4,7 @@ import { Box, Button, CardMedia, TextareaAutosize, Input } from '@mui/material'
 import TextAnimation from '../components/TextAnimation'
 import Sound from 'react-sound';
 import logo from '../assets/images/logo.svg'
-import audioUrl from '../assets/audio/start.mp3'
+import audioUrl from '../assets/audio/start.m4a'
 import { useAudioRecorder } from "@sarafhbk/react-audio-recorder"
 import useSpeechToText from 'react-hook-speech-to-text';
 import recordingIcon from '../assets/images/recording.svg'
