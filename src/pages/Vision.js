@@ -63,11 +63,14 @@ const Vision = () => {
       })
 
       socket.emit('videogenerate', {
-        inputaudio: window.localStorage.getItem('inputaudio')
+        inputaudio: window.localStorage.getItem('inputaudio'),
+        username: window.localStorage.getItem('username'),
+        inputtext: window.localStorage.getItem('inputtext')
       })
 
       socket.emit('txt2image', {
-        inputtext: window.localStorage.getItem('inputtext')
+        inputtext: window.localStorage.getItem('inputtext'),
+        inputaudio: window.localStorage.getItem('inputaudio')
       })
 
       socket.emit('openai', {

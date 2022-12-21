@@ -568,3 +568,9 @@ li.MuiMenuItem-root {
 .img-list {
   width: 100%;
 }
+
+.headphones_icon_check {
+  margin: auto;
+  width: 70% !important;
+  padding-left: 10px;
+}

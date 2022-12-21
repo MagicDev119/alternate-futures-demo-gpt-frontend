@@ -9,6 +9,8 @@ import { useAudioRecorder } from "@sarafhbk/react-audio-recorder"
 import useSpeechToText from 'react-hook-speech-to-text';
 import recordingIcon from '../assets/images/recording.svg'
 import pauseRecordingIcon from '../assets/images/pauseRecording.svg'
+import headphones_icon_check from '../assets/images/headphones_icon_check.png'
+import headphones_icon_playing from '../assets/images/headphones_icon_playing.png'
 
 const Home = ({ type }) => {
   const navigate = useNavigate()
@@ -42,7 +44,7 @@ const Home = ({ type }) => {
     window.localStorage.setItem('user_hobbies', userHobbies);
     window.localStorage.setItem('user_passionate', userPassionate);
     window.localStorage.setItem('username', userName);
-    navigate('/inputaudio')
+    navigate('/play')
   }
 
   const handleInputAudio = () => {
@@ -75,13 +77,27 @@ const Home = ({ type }) => {
           </h1>
         </Box>
         <Box component="div" sx={{ textAlign: 'center' }}>
-          <Box component="div" className="description" sx={{ m: ((type == 'inputtext' || type == 'inputaudio') ? '1rem 2rem 2rem 2rem' : '1rem 2rem 5rem 2rem'), textAlign: 'center' }}>
+          <Box component="div" className="description" sx={{ m: ((type == 'inputtext' || type == 'inputaudio' || type == 'start') ? '1rem 2rem 2rem 2rem' : '1rem 2rem 5rem 2rem'), textAlign: 'center' }}>
             {(type == 'start') && <TextAnimation textData={["How do you envision a future in which we are to succeed in overcoming the climate crisis?"]} />}
-            {(type == 'play') && <TextAnimation textData={["Listen to the following audio narrative and envision the future"]} />}
-            {(type == 'inputtext') && <TextAnimation textData={["Tell us about yourself - profession, hobbies, skills, etc."]} />}
+            {/* {(type == 'play') && <TextAnimation textData={["Listen to the following audio narrative and envision the future"]} />} */}
+            {(type == 'inputtext') && <TextAnimation textData={["Tell us about yourself"]} />}
             {(type == 'inputaudio') && <TextAnimation textData={["Please speak your vision of the future"]} />}
           </Box>
+          {(type == 'start') && <>
+            <CardMedia
+              className="headphones_icon_check"
+              component="img"
+              image={headphones_icon_check}
+              alt="Visual"
+            />
+          </>}
           {(type == 'play') && <>
+            <CardMedia
+              className="headphones_icon_check"
+              component="img"
+              image={headphones_icon_playing}
+              alt="Visual"
+            />
             <Sound
               url={audioUrl}
               playStatus={Sound.status.PLAYING}
@@ -90,14 +106,14 @@ const Home = ({ type }) => {
             />
           </>}
           {(type == 'inputtext') && <Box component="div">
-            <Input disableUnderline={true} className="input-text fillAvailable" value={userName} placeholder="Tell us your name" onChange={(e) => setUserName(e.target.value)} />
-            <Input disableUnderline={true} className="input-text fillAvailable" value={userProfession} placeholder="Tell us your profession" onChange={(e) => setUserProfession(e.target.value)} />
+            <Input disableUnderline={true} className="input-text fillAvailable" value={userName} placeholder="What is your name?" onChange={(e) => setUserName(e.target.value)} />
+            <Input disableUnderline={true} className="input-text fillAvailable" value={userProfession} placeholder="What is your profession?" onChange={(e) => setUserProfession(e.target.value)} />
             <Input disableUnderline={true} className="input-text fillAvailable" value={userHobbies} placeholder="What are your hobbies?" onChange={(e) => setUserHobbies(e.target.value)} />
             <TextareaAutosize
               maxRows={9}
               minRows={9}
               aria-label="maximum height"
-              placeholder="What are you passionate about"
+              placeholder="What are you passionate about?"
               className="input-text fillAvailable"
               value={userPassionate}
               onChange={e => setUserPassionate(e.target.value)}
@@ -125,8 +141,8 @@ const Home = ({ type }) => {
         </Box>
         <Box component="div" className="fillAvailable footer">
           <Box component="div">
-            {(type == 'start') && <Button onClick={() => navigate('/play')} variant="contained" className="fillAvailable button">Start</Button>}
-            {(type == 'play') && <Button onClick={() => navigate('/inputtext')} variant="contained" className="fillAvailable button">Next</Button>}
+            {(type == 'start') && <Button onClick={() => navigate('/inputtext')} variant="contained" className="fillAvailable button">Start</Button>}
+            {(type == 'play') && <Button onClick={() => navigate('/inputaudio')} variant="contained" className="fillAvailable button">Next</Button>}
             {(type == 'inputtext') && <Button variant="contained" className="fillAvailable button" onClick={() => handleStartVisionButton()}>Next</Button>}
             {(type == 'inputaudio') && <Button onClick={() => handleInputAudio()} variant="contained" className="fillAvailable button">Next</Button>}
           </Box>
