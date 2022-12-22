@@ -35,7 +35,8 @@ const Vision = () => {
           name: window.localStorage.getItem('username'),
           profession: window.localStorage.getItem('user_profession'),
           hobbies: window.localStorage.getItem('user_hobbies'),
-          passions: window.localStorage.getItem('user_passionate')
+          passions: window.localStorage.getItem('user_passionate'),
+          inputaudio: window.localStorage.getItem('inputaudio')
         })
       })
 
@@ -109,6 +110,21 @@ const Vision = () => {
 
   return (
     <>
+      <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
+        - Name: {window.localStorage.getItem('username')}
+      </Box>
+      <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
+        - Profession: {window.localStorage.getItem('user_profession')}
+      </Box>
+      <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
+        - Hobbies: {window.localStorage.getItem('user_hobbies')}
+      </Box>
+      <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
+        - Passionate: {window.localStorage.getItem('user_passionate')}
+      </Box>
+      <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
+        - Your Vision of the Future: {window.localStorage.getItem('inputaudio')}
+      </Box>
       <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
         - The image of your vision of the future
       </Box>
