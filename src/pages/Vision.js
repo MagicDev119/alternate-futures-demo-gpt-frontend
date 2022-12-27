@@ -162,8 +162,8 @@ const Vision = () => {
           muted
           loop
           playsinline='true'
-          src={(videoUrl && videoUrl.slice(0, 4) === 'http') ? videoUrl : process.env.REACT_APP_API_URL + videoUrl.slice(1)}
-        /> : ''}
+          src={(videoUrl.video && videoUrl.video.slice(0, 4) === 'http') ? videoUrl.video : process.env.REACT_APP_API_URL + videoUrl.video.slice(1)}
+        /> : 'Loading, your video will appear here (~10 minutes)'}
       </Box>
       {(pdfDownloadUrl !== '') && <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
         <Box component="span" onClick={() => { handleDownload((pdfDownloadUrl && pdfDownloadUrl.slice(0, 4) === 'http') ? pdfDownloadUrl : process.env.REACT_APP_API_URL + pdfDownloadUrl.slice(1)) }} sx={{ color: '#ccc', cursor: 'pointer' }}>
