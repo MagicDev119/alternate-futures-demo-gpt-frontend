@@ -151,19 +151,19 @@ const Vision = () => {
         - The video animation of your vision of the future
       </Box>
       <Box component="div" sx={{ m: '2rem 1rem', paddingBottom: '2rem' }}>
-        {(videoUrl !== '') ? <img
+        {/* {(videoUrl !== '') ? <img
           src={(videoUrl.thumbnail && videoUrl.thumbnail.slice(0, 4) === 'http') ? videoUrl.thumbnail : process.env.REACT_APP_API_URL + videoUrl.thumbnail.slice(1)}
           loading="lazy"
           className='img-list'
-        /> : 'Loading, your video will appear here (~10 minutes)'}
-        {/* {(videoUrl !== '') ? <CardMedia
+        /> : 'Loading, your video will appear here (~10 minutes)'} */}
+        {(videoUrl !== '') ? <CardMedia
           component="video"
           autoPlay
           muted
           loop
           playsinline='true'
           src={(videoUrl && videoUrl.slice(0, 4) === 'http') ? videoUrl : process.env.REACT_APP_API_URL + videoUrl.slice(1)}
-        /> : ''} */}
+        /> : ''}
       </Box>
       {(pdfDownloadUrl !== '') && <Box component="div" sx={{ m: '2rem 1rem', color: '#aaa' }}>
         <Box component="span" onClick={() => { handleDownload((pdfDownloadUrl && pdfDownloadUrl.slice(0, 4) === 'http') ? pdfDownloadUrl : process.env.REACT_APP_API_URL + pdfDownloadUrl.slice(1)) }} sx={{ color: '#ccc', cursor: 'pointer' }}>
